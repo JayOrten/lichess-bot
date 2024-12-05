@@ -38,6 +38,7 @@ class cGPT(MinimalEngine):
 
         :param model_path: The path to the cGPT model.
         """
+        print('device: ', device)
         with open(CONFIG_PATH, 'r') as f:
             config = yaml.safe_load(f)
 
@@ -73,7 +74,7 @@ class cGPT(MinimalEngine):
 
         model = model.model
 
-        model.cuda()
+        model.to(device)
         model.eval()
 
         return model
