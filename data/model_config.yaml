@@ -1,0 +1,56 @@
+# --- TOKENIZER ---
+# Tokenizer type: 'hf' for HuggingFace, 'sp' for SentencePiece
+tokenizer_type: sp
+# tokenizer_path: Path to tokenizer model
+tokenizer_path: C:\Users\jayor\Documents\repos\lichess-bot\data\tokenizer\tokenizer.model
+# vocab_path: Path to vocab file, not necessary for hf
+vocab_path: C:\Users\jayor\Documents\repos\lichess-bot\data\tokenizer\tokenizer.vocab
+# pad_id: Defined later by tokenizer.
+pad_id: 1
+# vocab_size: With SP, this is defined later by tokenizer. With HF, this must be defined.
+vocab_size: 700
+
+# --- PATHS ---
+# checkpoint_path: Path to checkpoint to use, if any, for resuming training or inference
+checkpoint_path: C:\Users\jayor\Documents\repos\lichess-bot\data\model\model-epoch=2-val_loss=1.87.ckpt
+
+# --- DEVICE ---
+accelerator: gpu
+devices: 8
+num_nodes: 1
+num_workers: 0
+use_slurm: true
+
+# --- TRAIN PARAMETERS ---
+batch_size: 32
+early_stopping: 10
+gamma: 0.85
+gradient_accumulation_steps: 8
+lr: 5.0e-3
+num_epochs: 3
+seed: 42
+
+# Saving/Logging
+check_val_every_n_epoch: 1
+log_every_n_steps: 100
+save_top_k: 3
+save_predictions_during_training: true
+# val_check_interval: check validation val_check_interval percentage of an epoch
+val_check_interval: 5000
+
+# --- MODEL PARAMETERS ---
+# Depending on model being used, these may need to be changed/added onto.
+
+# from_pretrained: whether using a pretrained model from HF or not
+from_pretrained: false
+# model_name: Pretrained model name, if using pretrained model, from HF
+model_name: ~
+
+dim_k: ~
+dim_v: ~
+dim: 1024
+max_sequence_embeddings: 256 # sequence_length
+multiple_of: 256  # * make SwiGLU hidden layer size multiple of large power of 2
+n_heads: 16
+n_layers: 12
+norm_eps: 1.0e-6
