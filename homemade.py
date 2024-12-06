@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 CONFIG_PATH = 'C:\\Users\\jayor\\Documents\\repos\\lichess-bot\\data\\model_config.yaml'
 
-device = torch.device('cuda:0' if 'CUDA_VISIBLE_DEVICES' in os.environ else 'cpu')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class cGPT(MinimalEngine):
     """A simple engine that uses the cGPT model to generate moves."""
 
@@ -60,7 +60,6 @@ class cGPT(MinimalEngine):
         return PlayResult(self.make_move(board), None)
     
     def load_model(self):
-        torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = Model(tokenizer=self.tokenizer, config=self.config)
 
         # Load checkpoint
@@ -68,7 +67,7 @@ class cGPT(MinimalEngine):
 
         print(f"Using checkpoint: {checkpoint_path}")
 
-        checkpoint = torch.load(checkpoint_path)
+        checkpoint = torch.load(checkpoint_path, weights_only=True)
 
         model.load_state_dict(checkpoint['state_dict'])
 
@@ -80,6 +79,7 @@ class cGPT(MinimalEngine):
         return model
     
     def make_move(self, board):
+        print('Making move...')
         current_moves = [x for x in board.move_stack]
 
         if len(current_moves) == 0:
@@ -95,11 +95,12 @@ class cGPT(MinimalEngine):
         # First, check if greedy move is legal
         k = 1
         while True:
+            print('k: ', k)
             move = self.gpt_move(move_sequence_san, do_sample=True, top_k=k)
             if not self.is_illegal(board, move):
                 break
             k += 1
-            if k > 700:
+            if k > 50:
                 move = board.san(random.choice(list(board.legal_moves)))
                 break
 
